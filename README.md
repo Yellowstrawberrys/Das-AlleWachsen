@@ -4,7 +4,7 @@
 
 ## LICENSE
 This project is licensed under
-[![CC BY 4.0][cc-by-na-sa-image]]
+[![CC BY NC SA 4.0][cc-by-nc-sa-shield]][cc-by-nc-sa]
 
 ## What is this?
 This is smartfarm that is based on Arduino. <br/>
