@@ -45,17 +45,20 @@ float t = dht.readTemperature();
 float sensorValue = 0; 
 
 //Temperature
-#define FAN1_VCC 8
-#define FAN1_GND 9
-#define FAN2_VCC 10
-#define FAN2_GND 11
+/*
+Fan1 -> Heating Sys.
+Fan2 -> Cooling Sys.
+*/
+#define FAN1 8
+#define FAN2 9
 
 //Light Control
-#define LightPin 4
+unsigned long startTime;
+bool isLightOn = false;
+#define LightPin 11
 
 //Water Pump Control
-#define WaterPump_VCC 5
-#define WaterPump_GND 6
+#define WaterPump 10
 
 // 'Das AlleWachsen', 128x64px
 const unsigned char epd_bitmap_Das_AlleWachsen [] PROGMEM = {
@@ -131,6 +134,7 @@ const unsigned char* epd_bitmap_allArray[1] = {
   epd_bitmap_Das_AlleWachsen
 };
 
+void lightControl(bool isOn);
 
 void setup() {
   //Begins Serial with 9600 board-rate
@@ -149,6 +153,15 @@ void setup() {
   bluetooth.begin(9600);
   bluetooth.write("AT+NAMEDas_AlleWachsen");
   dht.begin();
+
+  //Set Output
+  pinMode(FAN1, OUTPUT);
+  pinMode(FAN2, OUTPUT);
+  pinMode(WaterPump, OUTPUT);
+  pinMode(LightPin, OUTPUT);
+  
+  //Light
+  lightControl(true);
   delay(2000);
 
   display.clearDisplay();
@@ -156,11 +169,18 @@ void setup() {
   display.setTextColor(SH110X_WHITE);
   display.println("Connect to Bluetooth");
   display.println("\nID> Das AlleWachsen\nPW> 1234");
+  
   display.display();
+  startTime = millis();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  
+   if(startTime+120000 <= millis()){
+      startTime = millis();
+      lightControl(!isLightOn);
+   }
+
   if(bluetooth.available() > 0){
      char c = bluetooth.read();
      Serial.println(c);
@@ -171,16 +191,50 @@ void loop() {
      delay(1); 
    } 
    sensorValue = sensorValue/100.0; 
-   if(sensorValue < 40){
-      Serial.print("WATER");
-   }
-   if(h < 50){
-      Serial.print("MORE WATER IN AIR");    
-   }
-   if(t > 30){
-      Serial.print("Cooling System.");
-   }else if(t < 20){
-      Serial.print("Heating System.");
-   }
+   // if(sensorValue < 40){
+   //    Serial.print("WATER");
+   // }
+   // if(h < 50){
+   //    Serial.print("MORE WATER IN AIR");    
+   // }
+   // if(t > 30){
+   //    coolingSysOn();
+   //    Serial.print("Cooling System.");
+   // }else if(t < 20){
+   //    heatingSysOn();
+   //    Serial.print("Heating System.");
+   // }else{
+   //    deactiveTempSys();
+   // }
    delay(100);
+}
+
+void lightControl(bool isOn){
+   digitalWrite(LightPin, (isOn ? HIGH : LOW));
+   isLightOn = isOn;
+}
+
+void giveWater(){
+   digitalWrite(WaterPump, HIGH);
+   delay(2000);
+   digitalWrite(WaterPump, LOW);
+}
+
+void putWaterInAir(){
+
+}
+
+void coolingSysOn(){
+   digitalWrite(FAN1, LOW);
+   digitalWrite(FAN2, HIGH);
+}
+
+void heatingSysOn(){
+   digitalWrite(FAN2, LOW);
+   digitalWrite(FAN1, HIGH);
+}
+
+void deactiveTempSys(){
+   digitalWrite(FAN1, LOW);
+   digitalWrite(FAN2, LOW);
 }
