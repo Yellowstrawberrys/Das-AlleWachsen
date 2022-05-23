@@ -1,0 +1,85 @@
+html, body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    background-color: #1B1B1B;
+    overflow-x: hidden;
+}
+
+@font-face {
+    font-family: "Noirden";
+    src: url('font/Noirden Bold.ttf');
+}
+
+p{
+    font-size: 7vw;
+    color: white;
+    margin: 0;
+    font-family: "Noirden";
+}
+
+h1{
+    font-size: 3vw;
+    color: white;
+    margin: 0;
+    font-family: "Noirden";
+}
+
+.fst{
+    visibility: hidden;
+    margin-top: 44vh;
+    /*margin-right: -100%;*/
+    width: fit-content;
+    position: absolute;
+}
+
+center{
+    margin-top: 10vh;
+}
+
+.product{
+    width: 60vw;
+    margin-top: 40vh;
+    position: absolute;
+    margin-left: -30%;
+}
+
+@media screen and (max-width: 900px) {
+    p{
+        font-size: 13vw;
+        color: white;
+        margin: 0;
+        font-family: "Noirden";
+    }
+    h1{
+        font-size: 6vw;
+        color: white;
+        margin: 0;
+        font-family: "Noirden";
+    }
+    .product{
+        width: 60vw;
+        margin-top: 60vh;
+        position: absolute;
+        margin-left: -30%;
+    }
+}
+
+@keyframes scrollAni1 {
+    from{
+        margin-left: -30%;
+    }
+    to{
+        margin-left: -70%;
+    }
+}
+
+@keyframes textFromRight {
+    from{
+        right: -50%;
+    }
+    to{
+        right: 4%;
+    }
+}
